@@ -1,4 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
+import { Ionicons } from "@expo/vector-icons";
+import { Platform, Linking } from "react-native";
 import {
   View,
   Text,
@@ -39,11 +41,9 @@ export const Navbar = ({ setSection, activeSection }: NavbarProps) => {
     setSection(item);
   };
 
-  // Move highlight when section changes
   useEffect(() => {
     const index = items.indexOf(activeSection);
 
-    // Hide highlight if section not in navbar
     if (index === -1) {
       Animated.parallel([
         Animated.timing(opacity, {
@@ -80,6 +80,17 @@ export const Navbar = ({ setSection, activeSection }: NavbarProps) => {
     ]).start();
   }, [activeSection, layouts]);
 
+  const downloadResume = () => {
+    if (Platform.OS === "web") {
+      const link = document.createElement("a");
+      link.href = "/resume.pdf";
+      link.download = "Sajan_Shrestha_Resume.pdf";
+      link.click();
+    } else {
+      Linking.openURL("https://yourwebsite.com/resume.pdf");
+    }
+  };
+
   return (
     <View style={styles.navbar}>
       <BlurView intensity={70} tint="dark" style={styles.innerNav}>
@@ -93,8 +104,6 @@ export const Navbar = ({ setSection, activeSection }: NavbarProps) => {
         </Pressable>
 
         <View style={styles.linksWrapper}>
-          
-          {/* Animated highlight */}
           <Animated.View
             style={[
               styles.slider,
@@ -119,8 +128,13 @@ export const Navbar = ({ setSection, activeSection }: NavbarProps) => {
             ))}
           </ScrollView>
         </View>
-
       </BlurView>
+
+      {/* Resume Button (Right side) */}
+      <Pressable style={styles.downloadButton} onPress={downloadResume}>
+        <Ionicons name="download-outline" size={18} color="#00E5FF" />
+        <Text style={styles.downloadText}>Resume</Text>
+      </Pressable>
     </View>
   );
 };
@@ -180,5 +194,35 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "500",
+  },
+
+  downloadButton: {
+    position: "absolute",
+    right: 30,
+    top: 50,
+
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingHorizontal: 18,
+    paddingVertical: 10,
+    borderRadius: 30,
+
+    backgroundColor: "rgba(255,255,255,0.05)",
+    borderWidth: 1,
+    borderColor: "rgba(0,229,255,0.5)",
+
+    shadowColor: "#00E5FF",
+    shadowOpacity: 0.6,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 0 },
+
+    elevation: 10,
+  },
+
+  downloadText: {
+    color: "#00E5FF",
+    fontWeight: "600",
+    fontSize: 14,
   },
 });
