@@ -3,8 +3,8 @@ import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import skills from "../data/skills";
 
-export default function Skills() {
-
+export default function Skills({breakpoint}) {
+  const isSM = (breakpoint === "sm");
   const renderCategory = (title, list) => (
     <View style={styles.categorySection}>
 
@@ -12,9 +12,9 @@ export default function Skills() {
 
       <View style={styles.grid}>
         {list.map((s, i) => (
-          <View key={i} style={styles.skillCard}>
-            <FontAwesome5 name={s.icon} size={26} color="#0A66C2" />
-            <Text style={styles.skillName}>{s.name}</Text>
+          <View key={i} style={[styles.skillCard, isSM?{padding:10, margin:5}:{paddingVertical:16,paddingHorizontal:18,margin:8}]}>
+            <FontAwesome5 name={s.icon} size={isSM?16:26} color="#0A66C2" />
+            <Text style={[styles.skillName, isSM?{fontSize:10}:{fontSize:13}]}>{s.name}</Text>
           </View>
         ))}
       </View>
@@ -69,19 +69,15 @@ const styles = StyleSheet.create({
 
   skillCard:{
     backgroundColor:"#1a1a1a",
-    paddingVertical:16,
-    paddingHorizontal:18,
     borderRadius:14,
     alignItems:"center",
-    margin:8,
-    minWidth:110,
+    minWidth:80,
     borderWidth:1,
     borderColor:"#2a2a2a"
   },
 
   skillName:{
     marginTop:8,
-    fontSize:13,
     color:"#fff",
     textAlign:"center"
   }

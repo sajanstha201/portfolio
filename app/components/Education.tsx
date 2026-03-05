@@ -1,9 +1,12 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-export default function Education() {
+export default function Education({breakpoint}) {
+  const isSM = (breakpoint === "sm");
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, isSM?{paddingHorizontal:10, marginVertical:20}
+      :{paddingVertical:40,
+    paddingHorizontal:100},]}>
 
       <View style={styles.card}>
         <Text style={styles.degree}>
@@ -40,8 +43,7 @@ export default function Education() {
 const styles = StyleSheet.create({
 
   container:{
-    paddingVertical:40,
-    paddingHorizontal:100,
+
     flexDirection:"row",
     flexWrap:"wrap",
     justifyContent:"space-between",
@@ -58,7 +60,8 @@ const styles = StyleSheet.create({
 
   card:{
     flex:1,
-    maxWidth:700,
+    maxWidth:400,
+    minWidth:250,
 
     backgroundColor:"rgba(255,255,255,0.08)",
     borderRadius:16,

@@ -1,12 +1,22 @@
 import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
 import experience from "../data/experience";
 
-export default function Experience() {
+export default function Experience({breakpoint}) {
+  const isSM = (breakpoint ==="sm")
   return (
-    <View style={styles.container}>
+    <View style={[isSM?{
+      paddingHorizontal:10,
+      paddingVertical:50,
+    }:{
+    padding: 30,
+    paddingHorizontal: 100
+  },{
+    flex:1
+  }
+  ]}>
 
-      <View style={styles.timeline}>
+      <ScrollView style={styles.timeline} showsVerticalScrollIndicator={false}>
         {experience.map((e, i) => (
           <View key={i} style={styles.timelineItem}>
 
@@ -33,30 +43,25 @@ export default function Experience() {
               </Text>
 
               <Text style={styles.location}>{e.location}</Text>
-
+              {!isSM &&
               <View style={styles.descContainer}>
                 {e.desc.map((d, idx) => (
                   <Text key={idx} style={styles.desc}>
                     • {d}
                   </Text>
                 ))}
-              </View>
+              </View>}
 
             </View>
 
           </View>
         ))}
-      </View>
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-
-  container: {
-    padding: 30,
-    paddingHorizontal: 100
-  },
 
   heading: {
     fontSize: 30,

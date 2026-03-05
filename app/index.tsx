@@ -16,6 +16,15 @@ export default function Index() {
 
   const translateX = useRef(new Animated.Value(0)).current;
 
+  /* breakpoint detection */
+  const getBreakpoint = (w) => {
+    if (w < 640) return "sm";
+    if (w < 1024) return "md";
+    return "lg";
+  };
+
+  const breakpoint = getBreakpoint(width);
+
   useEffect(() => {
     if (!width) return;
 
@@ -33,36 +42,43 @@ export default function Index() {
       onLayout={(e) => setWidth(e.nativeEvent.layout.width)}
     >
       <BlurView intensity={100} tint="dark" style={{ flex: 1 }}>
-        <Navbar setSection={setSection} activeSection={section} />
+
+        {/* pass breakpoint to navbar */}
+        <Navbar
+          setSection={setSection}
+          activeSection={section}
+          breakpoint={breakpoint}
+        />
 
         {/* Prevent rendering before width is known */}
         {width > 0 && (
-          <View style={{ flex: 1, overflow: "hidden" }}>
+          <View style={{ flex: 1 }}>
             <Animated.View
               style={{
+                flex: 1,
                 flexDirection: "row",
                 width: width * sections.length,
                 transform: [{ translateX }],
               }}
             >
-              <View style={{ width }}>
-                <Home />
+              <View style={{ width, flex: 1 }}>
+                <Home breakpoint={breakpoint} />
               </View>
 
-              <View style={{ width }}>
-                <Experience />
+              <View style={{ width, flex: 1 }}>
+                <Experience breakpoint={breakpoint} />
               </View>
 
-              <View style={{ width }}>
-                <Projects />
+              <View style={{ width, flex: 1 }}>
+                <Projects breakpoint={breakpoint} />
               </View>
 
-              <View style={{ width }}>
-                <Skills />
+              <View style={{ width, flex: 1 }}>
+                <Skills breakpoint={breakpoint} />
               </View>
 
-              <View style={{ width }}>
-                <Achievements />
+              <View style={{ width, flex: 1 }}>
+                <Achievements breakpoint={breakpoint} />
               </View>
             </Animated.View>
           </View>

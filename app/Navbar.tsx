@@ -9,25 +9,30 @@ import {
   Image,
   StyleSheet,
   Animated,
-  LayoutChangeEvent,
 } from "react-native";
 import { BlurView } from "expo-blur";
 
-type NavbarProps = {
-  setSection: (section: string) => void;
-  activeSection: string;
-};
+export const Navbar = ({ setSection, activeSection, breakpoint }) => {
 
-export const Navbar = ({ setSection, activeSection }: NavbarProps) => {
   const items = ["Experience", "Projects", "Skills", "Achievements"];
+
+  /* icon mapping for small screens */
+  const icons = {
+    Experience: "briefcase-outline",
+    Projects: "code-slash-outline",
+    Skills: "construct-outline",
+    Achievements: "trophy-outline",
+  };
+
+  const isSM = breakpoint === "sm";
 
   const translateX = useRef(new Animated.Value(0)).current;
   const sliderWidth = useRef(new Animated.Value(0)).current;
   const opacity = useRef(new Animated.Value(0)).current;
 
-  const [layouts, setLayouts] = useState<{ x: number; width: number }[]>([]);
+  const [layouts, setLayouts] = useState([]);
 
-  const handleLayout = (index: number, e: LayoutChangeEvent) => {
+  const handleLayout = (index, e) => {
     const { x, width } = e.nativeEvent.layout;
 
     setLayouts((prev) => {
@@ -37,7 +42,7 @@ export const Navbar = ({ setSection, activeSection }: NavbarProps) => {
     });
   };
 
-  const handlePress = (item: string) => {
+  const handlePress = (item) => {
     setSection(item);
   };
 
@@ -123,19 +128,30 @@ export const Navbar = ({ setSection, activeSection }: NavbarProps) => {
                 onLayout={(e) => handleLayout(i, e)}
                 style={styles.linkContainer}
               >
-                <Text style={styles.link}>{item}</Text>
+                {isSM ? (
+                  <Ionicons
+                    name={icons[item]}
+                    size={20}
+                    color={activeSection === item ? "#00E5FF" : "white"}
+                  />
+                ) : (
+                  <Text style={styles.link}>{item}</Text>
+                )}
               </Pressable>
             ))}
           </ScrollView>
         </View>
       </BlurView>
-
-      {/* Resume Button (Right side) */}
-      <Pressable style={styles.downloadButton} onPress={downloadResume}>
+          {/* Resume Button */}
+      {!isSM&&<Pressable   style={[
+              styles.downloadButton
+            ]} onPress={downloadResume}>
         <Ionicons name="download-outline" size={18} color="#00E5FF" />
         <Text style={styles.downloadText}>Resume</Text>
-      </Pressable>
+      </Pressable>}
+
     </View>
+    
   );
 };
 
@@ -188,6 +204,8 @@ const styles = StyleSheet.create({
   linkContainer: {
     paddingHorizontal: 18,
     paddingVertical: 8,
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   link: {
@@ -197,10 +215,9 @@ const styles = StyleSheet.create({
   },
 
   downloadButton: {
-    position: "absolute",
+    position:"absolute",
     right: 30,
     top: 50,
-
     flexDirection: "row",
     alignItems: "center",
     gap: 8,

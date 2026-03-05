@@ -16,8 +16,8 @@ import useResponsive from "../hooks/useResponsive";
 import publications from "../data/publications";
 import certificates from "../data/certificates";
 
-export default function Achievements() {
-
+export default function Achievements({breakpoint}) {
+  const isSM = (breakpoint === "sm")
   const { isSmallScreen, isMediumScreen } = useResponsive();
   const columns = isSmallScreen ? 1 : isMediumScreen ? 2 : 3;
 
@@ -31,7 +31,7 @@ const renderBooks = () => (
   <View style={styles.section}>
 
     {publications.map((item, i) => (
-      <View key={i} style={styles.bookCard}>
+      <View key={i} style={[styles.bookCard, isSM?{ padding:10}:{padding:18}]}>
 
         <Image source={item.image} style={styles.bookImage} />
 
@@ -39,7 +39,7 @@ const renderBooks = () => (
 
           {/* Title + open icon */}
           <View style={styles.titleRow}>
-            <Text style={styles.bookTitle}>{item.title}</Text>
+            <Text style={[styles.bookTitle, isSM?{fontSize:14}:{fontSize: 17}]}>{item.title}</Text>
 
             <TouchableOpacity onPress={() => openLink(item.link)}>
               <Ionicons name="open-outline" size={24} color="white" />
@@ -47,12 +47,12 @@ const renderBooks = () => (
           </View>
 
           {/* Publisher */}
-          <Text style={styles.publisherText}>
+          <Text style={[styles.publisherText, isSM?{fontSize:12}:{fontSize:14}]}>
             Publisher: {item.publisher}
           </Text>
 
           {/* Date */}
-          <Text style={styles.dateText}>
+          <Text style={[styles.dateText, isSM?{fontSize:10}:{fontSize:13}]}>
             Published: {item.published_date}
           </Text>
 
@@ -75,21 +75,17 @@ const renderBooks = () => (
   /* ---------------- CERTIFICATES ---------------- */
 
 const renderCertificates = () => {
-
   const scrollRef = React.useRef(null);
   const scrollX = React.useRef(0);
   const lastClick = React.useRef(0);
 
-  const CARD_WIDTH = 246; // card width + margin
+  const CARD_WIDTH = 246;
 
   const scroll = (direction) => {
-
     const now = Date.now();
     const diff = now - lastClick.current;
 
-    // if clicks are fast → scroll more cards
     const multiplier = diff < 200 ? 3 : diff < 400 ? 2 : 1;
-
     const move = CARD_WIDTH * multiplier;
 
     const newX =
@@ -108,23 +104,33 @@ const renderCertificates = () => {
 
   return (
     <View style={styles.section}>
-      <Text style={styles.sectionTitle}>Certificates: {certificates.length}</Text>
+      <Text style={styles.sectionTitle}>
+        Certificates: {certificates.length}
+      </Text>
 
       <View style={styles.certContainer}>
 
-        {/* LEFT ARROW */}
-        <TouchableOpacity
-          style={styles.arrowButton}
-          onPress={() => scroll("left")}
-        >
-          <Ionicons name="chevron-back" size={28} color="white" />
-        </TouchableOpacity>
+        {/* LEFT ARROW (hide on mobile) */}
+        {!isSM && (
+          <TouchableOpacity
+            style={styles.arrowButton}
+            onPress={() => scroll("left")}
+          >
+            <Ionicons name="chevron-back" size={28} color="white" />
+          </TouchableOpacity>
+        )}
 
         <ScrollView
           ref={scrollRef}
           horizontal
+          pagingEnabled={isSM}
+          snapToInterval={isSM ? CARD_WIDTH : undefined}
+          decelerationRate={isSM ? "fast" : "normal"}
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.certScroll}
+          contentContainerStyle={[
+            styles.certScroll,
+            isSM && { paddingHorizontal: 20 }
+          ]}
           onScroll={(e) => {
             scrollX.current = e.nativeEvent.contentOffset.x;
           }}
@@ -133,7 +139,10 @@ const renderCertificates = () => {
           {certificates.map((item, i) => (
             <TouchableOpacity
               key={i}
-              style={styles.certificateCard}
+              style={[
+                styles.certificateCard,
+                isSM ?{ width: CARD_WIDTH }:{width:230}
+              ]}
               onPress={() => openLink(item.link)}
             >
               <Image source={item.image} style={styles.certImage} />
@@ -147,13 +156,15 @@ const renderCertificates = () => {
           ))}
         </ScrollView>
 
-        {/* RIGHT ARROW */}
-        <TouchableOpacity
-          style={styles.arrowButton}
-          onPress={() => scroll("right")}
-        >
-          <Ionicons name="chevron-forward" size={28} color="white" />
-        </TouchableOpacity>
+        {/* RIGHT ARROW (hide on mobile) */}
+        {!isSM && (
+          <TouchableOpacity
+            style={styles.arrowButton}
+            onPress={() => scroll("right")}
+          >
+            <Ionicons name="chevron-forward" size={28} color="white" />
+          </TouchableOpacity>
+        )}
 
       </View>
     </View>
@@ -161,7 +172,7 @@ const renderCertificates = () => {
 };
   return (
     <ScrollView
-      contentContainerStyle={styles.container}
+      contentContainerStyle={[isSM?{padding:20}:styles.container]}
       showsVerticalScrollIndicator={false}
     >
       {renderBooks()}
@@ -192,10 +203,8 @@ const styles = StyleSheet.create({
   /* ---------- BOOK CARDS ---------- */
 
   bookCard: {
-    flexDirection: "row",
+    flexDirection:"row",
     alignItems: "center",
-
-    padding: 18,
     borderRadius: 20,
     marginBottom: 18,
 
@@ -230,20 +239,17 @@ const styles = StyleSheet.create({
   },
 
   bookTitle: {
-    fontSize: 17,
     fontWeight: "600",
     color: "white",
     flex: 1,
     marginRight: 10,
   },
   publisherText: {
-  fontSize: 14,
   color: "rgba(255,255,255,0.85)",
   marginTop: 6,
 },
 
 dateText: {
-  fontSize: 13,
   color: "rgba(255,255,255,0.6)",
   marginTop: 2,
 },
@@ -280,8 +286,8 @@ certScroll:{
 },
 
 certificateCard:{
-  width:230,
   padding:14,
+  minHeight:230,
   borderRadius:20,
   marginRight:16,
 

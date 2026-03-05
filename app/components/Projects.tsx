@@ -14,8 +14,8 @@ import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import projects from "../data/projects";
 import useResponsive from "../hooks/useResponsive";
 
-export default function Projects(){
-
+export default function Projects({breakpoint}){
+  const isSM = (breakpoint === "sm")
   const { isSmallScreen, isMediumScreen } = useResponsive();
   const numColumns = isSmallScreen ? 1 : isMediumScreen ? 2 : 3;
 
@@ -23,7 +23,11 @@ export default function Projects(){
 
   return(
     <ScrollView
-      contentContainerStyle={styles.container}
+      contentContainerStyle={[isSM?{padding:20}:{
+    padding:30,
+    paddingHorizontal:100,
+    paddingBottom:80
+  },]}
       showsVerticalScrollIndicator={false}
     >
 
@@ -72,12 +76,6 @@ export default function Projects(){
 }
 
 const styles = StyleSheet.create({
-
-  container:{
-    padding:30,
-    paddingHorizontal:100,
-    paddingBottom:80
-  },
 
   heading:{
     fontSize:30,
