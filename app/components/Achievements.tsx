@@ -104,9 +104,6 @@ const renderCertificates = () => {
 
   return (
     <View style={styles.section}>
-      <Text style={styles.sectionTitle}>
-        Certificates: {certificates.length}
-      </Text>
 
       <View style={styles.certContainer}>
 
@@ -167,6 +164,9 @@ const renderCertificates = () => {
         )}
 
       </View>
+            <Text style={styles.sectionTitle}>
+        Total Certificates: {certificates.length}
+      </Text>
     </View>
   );
 };
@@ -194,9 +194,9 @@ const styles = StyleSheet.create({
   },
 
   sectionTitle: {
-    fontSize: 28,
+    fontSize: 16,
     fontWeight: "bold",
-    marginBottom: 26,
+    marginTop: 26,
     color: "white",
   },
 
