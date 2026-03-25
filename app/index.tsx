@@ -1,14 +1,13 @@
-import React, { useState, useRef, useEffect } from "react";
-import { View, Animated } from "react-native";
-import { Navbar } from "./Navbar";
 import { BlurView } from "expo-blur";
+import React, { useEffect, useRef, useState } from "react";
+import { Animated, View } from "react-native";
+import { Navbar } from "./Navbar";
 
-import Home from "./components/Home";
+import Achievements from "./components/Achievements";
 import Experience from "./components/Experience";
+import Home from "./components/Home";
 import Projects from "./components/Projects";
 import Skills from "./components/Skills";
-import Achievements from "./components/Achievements";
-
 export default function Index() {
   const sections = ["Hero", "Experience", "Projects", "Skills", "Achievements"];
   const [section, setSection] = useState("Hero");
@@ -35,6 +34,30 @@ export default function Index() {
       useNativeDriver: true,
     }).start();
   }, [section, width]);
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+
+    const script = document.createElement("script");
+
+    script.src = "https://test.amigaa.com/cdn/amigaa-chat-widget.iife.js";
+    script.defer = true;
+
+    // set data attributes
+    script.setAttribute("data-position", "bottom-right");
+    script.setAttribute("data-theme", "light");
+    script.setAttribute(
+      "data-__amg",
+      "8--iizl-aqd2c1a6c4-74c8-4df3-a277-433a48347388dogzk5d-o-",
+    );
+    script.setAttribute("data-auto-init", "true");
+
+    document.body.appendChild(script);
+
+    return () => {
+      // cleanup (optional but recommended)
+      document.body.removeChild(script);
+    };
+  }, []);
 
   return (
     <View
@@ -42,7 +65,6 @@ export default function Index() {
       onLayout={(e) => setWidth(e.nativeEvent.layout.width)}
     >
       <BlurView intensity={100} tint="dark" style={{ flex: 1 }}>
-
         {/* pass breakpoint to navbar */}
         <Navbar
           setSection={setSection}
