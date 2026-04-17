@@ -47,7 +47,7 @@ export default function Index() {
     script.setAttribute("data-theme", "light");
     script.setAttribute(
       "data-__amg",
-      "8--iizl-aqd2c1a6c4-74c8-4df3-a277-433a48347388dogzk5d-o-",
+      "r1gdjeoi19e06e98f6-2193-4942-9997-352601c1cfe9eiw51urc3h",
     );
     script.setAttribute("data-auto-init", "true");
 
